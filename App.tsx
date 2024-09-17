@@ -1,4 +1,4 @@
-import { NewGroup } from '@screens/NewGroup'
+import { Players } from '@screens/Players'
 import { ThemeProvider } from 'styled-components'
 import {
   useFonts,
@@ -28,7 +28,7 @@ export default function App() {
         backgroundColor="transparent"
         translucent
       />
-      {fontsLoaded ? <NewGroup /> : <Loading />}
+      {fontsLoaded ? <Players /> : <Loading />}
     </ThemeProvider>
   )
 }
