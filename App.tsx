@@ -2,8 +2,10 @@ import { Groups } from '@screens/Groups'
 import { ThemeProvider } from 'styled-components'
 import {
   useFonts,
-  Roboto_400Regular as Roboto400Regular,
-  Roboto_700Bold as Roboto700Regular,
+  // eslint-disable-next-line camelcase
+  Roboto_400Regular,
+  // eslint-disable-next-line camelcase
+  Roboto_700Bold,
 } from '@expo-google-fonts/roboto'
 
 import { Loading } from '@components/Loading'
@@ -13,8 +15,10 @@ import { StatusBar } from 'react-native'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    Roboto400Regular,
-    Roboto700Regular,
+    // eslint-disable-next-line camelcase
+    Roboto_400Regular,
+    // eslint-disable-next-line camelcase
+    Roboto_700Bold,
   })
 
   return (
