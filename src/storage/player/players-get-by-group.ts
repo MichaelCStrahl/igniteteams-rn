@@ -1,13 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { GROUP_COLLECTION } from '@storage/storage-config'
+import { PLAYER_COLLECTION } from '@storage/storage-config'
 import { PlayerStorageDTO } from './player-storage-dto'
 
 export async function playersGetByGroup(group: string) {
   // eslint-disable-next-line no-useless-catch
   try {
-    const storageKey = `${GROUP_COLLECTION}-${group}`
-
-    const storage = await AsyncStorage.getItem(storageKey)
+    const storage = await AsyncStorage.getItem(`${PLAYER_COLLECTION}-${group}`)
 
     const players: PlayerStorageDTO[] = storage ? JSON.parse(storage) : []
 

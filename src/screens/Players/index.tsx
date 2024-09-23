@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Alert, FlatList, TextInput } from 'react-native'
-import { useRoute } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 import { Container, Form, HeaderList, NumberOfPlayers } from './styles'
 
@@ -16,6 +16,8 @@ import { AppError } from '@utils/app-error'
 import { playerAddByGroup } from '@storage/player/player-add-by-group'
 import { playersGetByGroupAndTeam } from '@storage/player/players-get-by-group-and-team'
 import { PlayerStorageDTO } from '@storage/player/player-storage-dto'
+import { playerRemoveByGroup } from '@storage/player/player-remove-by-group'
+import { groupRemoveByName } from '@storage/group/group-remove-by-name'
 
 type RouteParams = {
   group: string
@@ -26,6 +28,7 @@ export function Players() {
   const [players, setPlayers] = useState<PlayerStorageDTO[]>([])
   const [newPlayerName, setNewPlayerName] = useState('')
 
+  const navigation = useNavigation()
   const newPlayerNameInputRef = useRef<TextInput>(null)
   const route = useRoute()
   const { group } = route.params as RouteParams
@@ -76,6 +79,33 @@ export function Players() {
     }
   }
 
+  const handlePlayerRemove = async (playerName: string) => {
+    try {
+      await playerRemoveByGroup(playerName, group)
+      fetchPlayersByTeam()
+    } catch (error) {
+      console.log(error)
+      Alert.alert('Remover pessoa', 'Não foi possível remover essa pessoa.')
+    }
+  }
+
+  const groupRemove = async () => {
+    try {
+      await groupRemoveByName(group)
+      navigation.navigate('groups')
+    } catch (error) {
+      console.error(error)
+      Alert.alert('Remover grupo', 'Não foi possível remover o grupo')
+    }
+  }
+
+  const handleGroupRemove = async () => {
+    Alert.alert('Remover', 'Deseja remover o grupo?', [
+      { text: 'Não', style: 'cancel' },
+      { text: 'Sim', onPress: () => groupRemove() },
+    ])
+  }
+
   useEffect(() => {
     fetchPlayersByTeam()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -124,14 +154,21 @@ export function Players() {
         ]}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <PlayerCard name={item.name} onRemove={() => console.log('removi')} />
+          <PlayerCard
+            name={item.name}
+            onRemove={() => handlePlayerRemove(item.name)}
+          />
         )}
         ListEmptyComponent={() => (
           <ListEmpty message="Não há pessoas nesse time" />
         )}
       />
 
-      <Button title="Remover turma" type="secondary" />
+      <Button
+        title="Remover turma"
+        type="secondary"
+        onPress={handleGroupRemove}
+      />
     </Container>
   )
 }
