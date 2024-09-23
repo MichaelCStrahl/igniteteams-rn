@@ -7,13 +7,19 @@ import { Header } from '@components/Header'
 import { Button } from '@components/Button'
 import { Highlight } from '@components/Highlight'
 import { useNavigation } from '@react-navigation/native'
+import { createGroup } from '@storage/group/group-create'
 
 export function NewGroup() {
   const [group, setGroup] = useState('')
   const navigation = useNavigation()
 
-  const handleGoPlayers = () => {
-    navigation.navigate('players', { group })
+  const handleGoPlayers = async () => {
+    try {
+      await createGroup(group)
+      navigation.navigate('players', { group })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
